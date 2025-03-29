@@ -44,17 +44,18 @@ public final class UnicornPublisher {
             logger.debug("Event payload: {}", unicornJson);
 
             var eventsRequest = createEventRequestEntry(unicornEventType, unicornJson);
-            return eventBridgeClient.putEvents(eventsRequest)
-                    .thenApply(response -> {
-                        logger.info("Successfully published event type: {} for unicorn ID: {}",
-                            unicornEventType, unicorn.getId());
-                        return response;
-                    })
-                    .exceptionally(throwable -> {
-                        logger.error("Failed to publish event type: {} for unicorn ID: {}",
-                            unicornEventType, unicorn.getId(), throwable);
-                        throw new RuntimeException("Failed to publish event", throwable);
-                    });
+            return CompletableFuture.completedFuture(null);
+            // return eventBridgeClient.putEvents(eventsRequest)
+            //         .thenApply(response -> {
+            //             logger.info("Successfully published event type: {} for unicorn ID: {}",
+            //                 unicornEventType, unicorn.getId());
+            //             return response;
+            //         })
+            //         .exceptionally(throwable -> {
+            //             logger.error("Failed to publish event type: {} for unicorn ID: {}",
+            //                 unicornEventType, unicorn.getId(), throwable);
+            //             throw new RuntimeException("Failed to publish event", throwable);
+            //         });
         } catch (JsonProcessingException e) {
             logger.error("Failed to serialize unicorn object", e);
             return CompletableFuture.failedFuture(e);
@@ -75,14 +76,14 @@ public final class UnicornPublisher {
     private void createClient() {
         logger.info("Creating EventBridgeAsyncClient");
 
-        eventBridgeClient = EventBridgeAsyncClient
-                .builder()
-                .credentialsProvider(DefaultCredentialsProvider.create())
-                .build();
+        // eventBridgeClient = EventBridgeAsyncClient
+        //         .builder()
+        //         .credentialsProvider(DefaultCredentialsProvider.create())
+        //         .build();
     }
 
     public void closeClient() {
         logger.info("Closing EventBridgeAsyncClient");
-        eventBridgeClient.close();
+        // eventBridgeClient.close();
     }
 }
