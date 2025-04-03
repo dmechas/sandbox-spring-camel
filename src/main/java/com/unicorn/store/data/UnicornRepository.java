@@ -1,9 +1,10 @@
 package com.unicorn.store.data;
 
-import com.unicorn.store.model.Unicorn;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.unicorn.store.model.Unicorn;
+
 @Repository
-public interface UnicornRepository extends CrudRepository<Unicorn, String > {
+public interface UnicornRepository extends CrudRepository<Unicorn, String> {
 }

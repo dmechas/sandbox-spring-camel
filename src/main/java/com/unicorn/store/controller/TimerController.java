@@ -1,4 +1,4 @@
-package com.unicorn.store.metrics;
+package com.unicorn.store.controller;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(prefix = "camel.component.cenas", name="enabled", havingValue = "true")
-public class TimerController  extends RouteBuilder {
+@ConditionalOnProperty(prefix = "camel.component.cenas", name = "enabled", havingValue = "true")
+public class TimerController extends RouteBuilder {
 
     @Value("${camel.component.cenas.timer.interval}")
     private String interval;
@@ -17,8 +17,8 @@ public class TimerController  extends RouteBuilder {
         log.debug("Creating Cenas route with interval: {}", interval);
 
         from("timer:hello?period=" + interval)
-            .routeId("cenasRoute")
-            .to("bean:myBean?method=saySomething")
-            .log("Cenas: ${body}");
+                .routeId("cenasRoute")
+                .to("bean:myBean?method=saySomething")
+                .log("Cenas: ${body}");
     }
 }

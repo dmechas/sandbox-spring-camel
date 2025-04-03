@@ -1,9 +1,4 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
-  "editor.formatOnSave": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "never",
-    "source.organizeImports": "never"
-  },
   "java.configuration.updateBuildConfiguration": "automatic",
 }

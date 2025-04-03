@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         temp:
@@ -34,9 +34,14 @@ camel:
     cenas:
       enabled: true
       timer:
-        interval: 10000
+        interval: 60000
     http:
       enabled: true
+
+app:
+  version: "@project.version@"
+  spring:
+    version: "@spring-boot-version@"
 
 management:
   endpoint:
@@ -49,8 +54,6 @@ management:
     web:
       base-path: /actuator
       exposure:
-        include: camelroutes,health,info
+        include: camelroutes,health,info,app
   server:
     port: 8381
-  security:
-    enabled: false

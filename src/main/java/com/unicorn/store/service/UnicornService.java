@@ -1,28 +1,26 @@
 package com.unicorn.store.service;
 
-import com.unicorn.store.data.UnicornPublisher;
-import com.unicorn.store.data.UnicornRepository;
-import com.unicorn.store.exceptions.ResourceNotFoundException;
-import com.unicorn.store.model.Unicorn;
-import com.unicorn.store.model.UnicornEventType;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.UUID;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
+import com.unicorn.store.data.UnicornRepository;
+import com.unicorn.store.exceptions.ResourceNotFoundException;
+import com.unicorn.store.model.Unicorn;
 
 @Service
 public class UnicornService {
     private final UnicornRepository unicornRepository;
-    private final UnicornPublisher unicornPublisher;
     private static final Logger logger = LoggerFactory.getLogger(UnicornService.class);
 
-    public UnicornService(UnicornRepository unicornRepository, UnicornPublisher unicornPublisher) {
+    public UnicornService(UnicornRepository unicornRepository) {
         this.unicornRepository = unicornRepository;
-        this.unicornPublisher = unicornPublisher;
     }
 
     @Transactional
@@ -34,7 +32,6 @@ public class UnicornService {
         validateUnicorn(unicorn);
 
         var savedUnicorn = unicornRepository.save(unicorn);
-        publishUnicornEvent(savedUnicorn, UnicornEventType.UNICORN_CREATED);
 
         logger.debug("Created unicorn with ID: {}", savedUnicorn.getId());
         return savedUnicorn;
@@ -64,7 +61,6 @@ public class UnicornService {
 
         unicorn.setId(unicornId);
         var savedUnicorn = unicornRepository.save(unicorn);
-        publishUnicornEvent(savedUnicorn, UnicornEventType.UNICORN_UPDATED);
 
         logger.debug("Updated unicorn with ID: {}", unicornId);
         return savedUnicorn;
@@ -83,7 +79,6 @@ public class UnicornService {
         var unicorn = getUnicorn(unicornId);
 
         unicornRepository.delete(unicorn);
-        publishUnicornEvent(unicorn, UnicornEventType.UNICORN_DELETED);
 
         logger.debug("Deleted unicorn with ID: {}", unicornId);
     }
@@ -93,15 +88,5 @@ public class UnicornService {
             throw new IllegalArgumentException("Unicorn cannot be null");
         }
         // Add additional validation rules as needed
-    }
-
-    private void publishUnicornEvent(Unicorn unicorn, UnicornEventType eventType) {
-        try {
-            unicornPublisher.publish(unicorn, eventType).get();
-        } catch (Exception e) {
-            logger.error("Failed to publish {} event for unicorn ID: {}",
-                    eventType, unicorn.getId(), e);
-            // Consider if you want to throw an exception here or just log the error
-        }
     }
 }
